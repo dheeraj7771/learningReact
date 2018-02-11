@@ -12,13 +12,16 @@ export default class RandomQuote extends Component {
     }
     componentDidMount() {
       var path = 'https://talaikis.com/api/quotes/random/';
-      request.get(path).end((error, result) => {
+      request.get(path).then((result) => {
         this.setState({
           randomQuote: result.body.quote,
           author: result.body.author,
           cat: result.body.cat
         })
-      });
+      })
+      .catch((error) => {
+          console.log(error);
+      })
     }
     render() {
       
