@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import request from 'superagent';
 
 class App extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class App extends Component {
       <div className="App">
           <Biography />
           <GroceryList />
+          <RandomQuote />
           <p>The date is: {this.state.time}</p>
       </div>
     );
@@ -89,7 +91,6 @@ class GroceryList extends Component {
   render() {
     return (
       <div>
-        
         <h1>Grocery List</h1>
         <ul>
           {this.state.grocerys.map((grocery, index) => <li key={index}>{grocery} <button onClick= {this.handleDeleteSelective.bind(this, grocery)}>Remove</button></li>)} 
@@ -99,10 +100,45 @@ class GroceryList extends Component {
         <button onClick= {this.handleAdd.bind(this)}>Add grocery
         </button>
         <button onClick= {this.handleDelete.bind(this)}>Delete</button>
+        <hr/>
       </div>
     )
   }
 }
 
+class RandomQuote extends Component {
+  constructor() {
+    super();
+    this.state = {
+      randomQuote: '',
+      author: '',
+      cat: ''
+    }
+  }
+  componentDidMount() {
+    var path = 'https://talaikis.com/api/quotes/random/';
+    request.get(path).end((error, result) => {
+      this.setState({
+        randomQuote: result.body.quote,
+        author: result.body.author,
+        cat: result.body.cat
+      })
+    });
+  }
+  render() {
+    
+    return (
+      <div>
+        <h1>Random Quote</h1>
+        <p>{this.state.randomQuote}</p>
+        <h2>Author</h2>
+        <p>{this.state.author}</p>
+        <h3>Category</h3>
+        <p>{this.state.cat}</p>
+        <hr />
+      </div>
+    )
+  }
+}
 
 export default App;
